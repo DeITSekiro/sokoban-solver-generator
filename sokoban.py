@@ -11,6 +11,8 @@ from src.game import Game
 from src.generator import generate
 from src.utils import play_solution
 from src.widgets import sidebar_widgets
+from src.hillclimbing import solve_hill_climbing
+
 
 random.seed(6)
 
@@ -173,6 +175,31 @@ def play_game(window, level=1, random_game=False, random_seed=None, **widgets):
                         ('Deadlock Found!' if depth < 0 else f'Depth {depth}'), 
                         20,
                     )
+            #Add hill-climbing
+            elif event.type == SOLVE_HILL_CLIMBING_EVENT:
+                print('Running Hill-Climbing algorithm\n')
+                solution, depth = solve_hill_climbing(
+                    game.get_matrix(), 
+                    widget=widgets['paths'], 
+                    visualizer=widgets['toggle'].getValue()
+                )
+                runtime = round(time.time() - start, 5)
+                if solution:
+                    widgets['paths'].solved = True
+                    widgets['paths'].transparency = True
+                    widgets['paths'].set_text(
+                        f'[Hill-Climbing] Solution Found in {runtime}s!\n{solution}',
+                        20,
+                    )
+                    moves = play_solution(solution, game, widgets, show_solution, moves)
+                else:
+                    widgets['paths'].solved = False
+                    widgets['paths'].set_text(
+                        '[Hill-Climbing] Solution Not Found!\n' + 
+                        ('Deadlock Found!' if depth < 0 else f'Depth {depth}'), 
+                        20,
+                    )
+
             elif event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_d, pygame.K_RIGHT):
                     moves += game.player.update(key='R')
@@ -220,11 +247,15 @@ def draw_menu(window, background_image):
 
     play_button_rect = play_button.get_rect(center=(window.get_width() // 2, window.get_height() // 2 ))
     quit_button_rect = quit_button.get_rect(center=(window.get_width() // 2, window.get_height() // 2 + 100))
-    pygame.draw.rect(window, (255, 255, 255), (play_button_rect.left -15, play_button_rect.top - 10, play_button_rect.width + 30, play_button_rect.height + 20))
-    pygame.draw.rect(window, (255, 255, 255), (quit_button_rect.left -15, quit_button_rect.top - 10, quit_button_rect.width + 30, quit_button_rect.height + 20))
+
+    pygame.draw.rect(window, (255, 255, 255), (play_button_rect.left - 15, play_button_rect.top - 10, play_button_rect.width + 30, play_button_rect.height + 20))
+    pygame.draw.rect(window, (255, 255, 255), (quit_button_rect.left - 15, quit_button_rect.top - 10, quit_button_rect.width + 30, quit_button_rect.height + 20))
+
     window.blit(play_button, play_button_rect)
     window.blit(quit_button, quit_button_rect)
+
     return play_button_rect, quit_button_rect
+
 def main():
     pygame.init()
     displayIcon = pygame.image.load('img/icon.png')
@@ -255,6 +286,7 @@ def main():
                         pass
 
             play_button_rect, quit_button_rect = draw_menu(window, background_image)
+            
             pygame.display.flip()
 
     handle_menu()

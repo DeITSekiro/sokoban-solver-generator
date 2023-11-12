@@ -165,29 +165,34 @@ def is_deadlock(state, shape):
 		return True
 	return False
 
-
 def can_move(state, shape, player_pos, move):
-	new_state = list(state)
-	x, y = player_pos
-	_, width = shape
-	move_cost = 0
-	target = x + move[0], y + move[1]
-	boxtarget = x + move[0] * 2, y + move[1] * 2
-	curr1d = x * width + y
-	target1d = target[0] * width + target[1]
-	boxtarget1d = boxtarget[0] * width + boxtarget[1]
-	if state[target1d] == '+':
-		return None, move_cost
-	elif state[target1d] in '-X':
-		new_state[curr1d] = '-' if new_state[curr1d] == '*' else 'X'
-		new_state[target1d] = '*' if new_state[target1d] == '-' else '%'
-		move_cost = 3
-	elif state[target1d] in '@$':
-		if state[boxtarget1d] in '+@$':
-			return None, move_cost
-		elif state[boxtarget1d] in '-X':
-			new_state[boxtarget1d] = '@' if new_state[boxtarget1d] == '-' else '$'
-			new_state[target1d] = '*' if new_state[target1d] == '@' else '%'
-			new_state[curr1d] = '-' if new_state[curr1d] == '*' else 'X'
-			move_cost = 0 if new_state[boxtarget1d] == '$' else 2
-	return ''.join(new_state), move_cost
+    new_state = list(state)
+    x, y = player_pos
+    _, width = shape
+    move_cost = 0
+    target = x + move[0], y + move[1]
+    boxtarget = x + move[0] * 2, y + move[1] * 2
+    curr1d = x * width + y
+    target1d = int(target[0]) * width + int(target[1])
+    boxtarget1d = int(boxtarget[0]) * width + int(boxtarget[1])
+    if state[target1d] == '+':
+        return None, move_cost
+    elif state[target1d] in '-X':
+        new_state[int(curr1d)] = '-' if new_state[int(curr1d)] == '*' else 'X'
+        new_state[int(target1d)] = '*' if new_state[int(target1d)] == '-' else '%'
+        move_cost = 3
+    elif state[target1d] in '@$':
+        if state[boxtarget1d] in '+@$':
+            return None, move_cost
+        elif state[boxtarget1d] in '-X':
+            new_state[int(boxtarget1d)] = '@' if new_state[int(boxtarget1d)] == '-' else '$'
+            new_state[int(target1d)] = '*' if new_state[int(target1d)] == '@' else '%'
+            new_state[int(curr1d)] = '-' if new_state[int(curr1d)] == '*' else 'X'
+            move_cost = 0 if new_state[int(boxtarget1d)] == '$' else 2
+    return ''.join(new_state), move_cost
+
+
+
+
+
+

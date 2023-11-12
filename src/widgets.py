@@ -52,6 +52,13 @@ def sidebar_widgets(window):
 		onClick=lambda: pygame.event.post(pygame.event.Event(SOLVE_DIJKSTRA_EVENT)),
 		borderColor='black', borderThickness=2,
 	)
+	#add button for hill-climbing
+	hill_climbing_button = Button(
+    window, 1055, 510, 130, 40, text='Hill-Climbing', radius=5,
+    font=pygame.font.SysFont('Verdana', 14, bold=True),
+    onClick=lambda: pygame.event.post(pygame.event.Event(SOLVE_HILL_CLIMBING_EVENT)),
+    borderColor='black', borderThickness=2,
+	)
 	seed = Label(window, f'Seed', 1055, 190, 16)
 	seedbox = TextBox(
 		window, 1110, 191, 75, 28, placeholderText='Seed',
@@ -79,6 +86,7 @@ def sidebar_widgets(window):
 		'seed': seed,
 		'astarman': astarman_button,
 		'dijkstra': dijk_button,
+		'hill_climbing_button': hill_climbing_button,
 	}
 
 
@@ -230,3 +238,5 @@ class LevelClear(Label):
 		text_pos_y = (self.rect.height - self.image.get_height()) // 2 + self.rect.y
 		self.window.blit(transparent_surface, (self.rect.x, self.rect.y))
 		self.window.blit(self.image, (text_pos_x,text_pos_y))
+
+
