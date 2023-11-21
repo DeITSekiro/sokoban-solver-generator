@@ -8,11 +8,6 @@ import pygame
 from src.utils import can_move, get_state, is_deadlock, is_solved, print_state
 
 
-
-
-
-
-
 def dfs(matrix, player_pos, widget=None, visualizer=False):
     print('Depth-First Search')
     initial_state = get_state(matrix)

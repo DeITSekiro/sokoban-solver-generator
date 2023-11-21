@@ -12,7 +12,7 @@ from src.generator import generate
 from src.utils import play_solution
 from src.widgets import sidebar_widgets
 from src.hillclimbing import solve_hill_climbing
-from src.gbfs import solve_gbfs
+from src.greedy import solve_greedy
 
 
 random.seed(6)
@@ -122,15 +122,15 @@ def play_game(window, level=1, random_game=False, random_seed=None, **widgets):
                         ('Deadlock Found!' if depth < 0 else f'Depth {depth}'), 
                         20,
                     )
-            elif event.type == SOLVE_GBFS_EVENT:
+            elif event.type == SOLVE_GREEDY_EVENT:
                 print('Finding a solution for the puzzle\n')
                 widgets['paths'].reset('Solving with [Greedy]')
                 show_solution = True
                 start = time.time()
-                solution, depth = solve_gbfs(
+                solution, depth = solve_greedy(
                     game.get_matrix(), 
                     widget=widgets['paths'], 
-                    visualizer=widgets['toggle'].getValue()
+                    visualizer=widgets['toggle'].getValue(),
                 )
                 runtime = round(time.time() - start, 5)
                 if solution:
