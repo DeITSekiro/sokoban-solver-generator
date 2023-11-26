@@ -4,7 +4,7 @@ import pygame
 
 from .utils import can_move, get_state, is_deadlock, is_solved, print_state
 
-def hill_climbing(matrix, player_pos, widget=None, visualizer=False):
+def hill_climbing(matrix, player_pos, widget=None, visualizer=False, max_time=60):
     print('Hill-Climbing Search')
     initial_state = get_state(matrix)
     shape = matrix.shape
@@ -23,6 +23,7 @@ def hill_climbing(matrix, player_pos, widget=None, visualizer=False):
         (0, 1): 'R',
     }
     
+    start_time = time.time()  # Lưu thời gian bắt đầu
     stop_flag = False  # Flag to indicate whether to stop the algorithm
     
     while not stop_flag:
@@ -66,21 +67,24 @@ def hill_climbing(matrix, player_pos, widget=None, visualizer=False):
                 widget.set_text(f'[Hill-Climbing] Solution Depth: {current_depth}\n{path}', 20)
                 pygame.display.update()
 
+            # Kiểm tra thời gian và dừng nếu vượt quá giới hạn
+            if time.time() - start_time > max_time:
+                print(f"[Hill-Climbing] Time limit ({max_time} seconds) exceeded.")
+                stop_flag = True
+
         except KeyboardInterrupt:
             print("Hill-Climbing algorithm interrupted.")
             stop_flag = True  # Set the flag to stop the algorithm
 
 
-
-
-
-def solve_hill_climbing(puzzle, widget=None, visualizer=False):
+def solve_hill_climbing(puzzle, max_time=60, widget=None, visualizer=False):
     matrix = puzzle
     where = np.where((matrix == '*') | (matrix == '%'))
     player_pos = tuple(np.where((matrix == '*') | (matrix == '%')))
-    return hill_climbing(matrix, player_pos, widget, visualizer)
+    return hill_climbing(matrix, player_pos, widget, visualizer, max_time)
 
 if __name__ == '__main__':
     start = time.time()
-    root = solve_hill_climbing(np.loadtxt('levels/lvl7.dat', dtype='<U1'))
+    max_time = 10  # Thời gian tối đa là 60 giây
+    root = solve_hill_climbing(np.loadtxt('levels/lvl7.dat', dtype='<U1'), max_time=max_time)
     print(f'Runtime: {time.time() - start} seconds')
