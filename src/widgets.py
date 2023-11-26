@@ -65,7 +65,7 @@ def sidebar_widgets(window):
     #add greedy button
     gbfs_button = Button(window, 1055, 590, 130, 40, text='Greedy', radius=5,
     font=pygame.font.SysFont('Verdana', 14, bold=True),
-    onClick=lambda: pygame.event.post(pygame.event.Event(SOLVE_GBFS_EVENT)),
+    onClick=lambda: pygame.event.post(pygame.event.Event(SOLVE_GREEDY_EVENT)),
     borderColor='black', borderThickness=2,
     )
     dijk_button = Button(
@@ -186,9 +186,10 @@ class MultilineLabel(Label):
     def set_text(self, new_text, font_size, color='black'):
         self.font = pygame.font.SysFont('Verdana', font_size, bold=True)
         self.new_lines = new_text.split('\n')
-        path_split = []
-        for i in range(0, len(self.new_lines[1]), 60):
-            path_split.append(self.new_lines[1][i:i + 60])
+        if len(self.new_lines) > 1:
+            path_split = []
+            for i in range(0, len(self.new_lines[1]), 60):
+                path_split.append(self.new_lines[1][i:i + 60])
         self.lines = [self.new_lines[0]] + path_split
         self.max_lines = max(self.max_lines, len(self.lines))
         while len(self.lines) < self.max_lines:
